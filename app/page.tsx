@@ -3,6 +3,7 @@
 import { faCaretLeft, faCaretRight, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Home() {
@@ -34,7 +35,7 @@ export default function Home() {
   };
 
   return (
-    <div className="w-[480px] mx-auto h-screen mt-10 px-5 select-none font-bold space-y-5">
+    <div className="space-y-5">
       <div className="flex items-center space-x-3">
         <button>
           <FontAwesomeIcon icon={faCaretLeft} onClick={onClickLeftBtn} />
@@ -72,8 +73,10 @@ export default function Home() {
           <button className="text-lg">
             <FontAwesomeIcon icon={faMagnifyingGlass} />
           </button>
-          <button className="text-xl">
-            <FontAwesomeIcon icon={faPlus} />
+          <button className="text-xl hover:text-green-500 duration-300">
+            <Link href={"/create"}>
+              <FontAwesomeIcon icon={faPlus} />
+            </Link>
           </button>
         </div>
       </div>

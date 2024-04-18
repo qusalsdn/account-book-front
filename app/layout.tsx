@@ -13,7 +13,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body className="w-[480px] mx-auto h-screen mt-10 px-5 select-none font-bold">
+        {children}
+      </body>
     </html>
   );
 }
