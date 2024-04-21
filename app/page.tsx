@@ -151,7 +151,7 @@ export default function Home() {
                         </span>
                         <div>
                           <p>{item.category}</p>
-                          <p className="text-sm text-slate-400 font-normal">메모</p>
+                          <p className="text-sm text-slate-400 font-normal">{item.memo}</p>
                         </div>
                       </div>
                       <p>
