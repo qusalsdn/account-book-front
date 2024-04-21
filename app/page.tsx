@@ -9,10 +9,20 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
+interface breakdown {
+  id: number;
+  type: string;
+  category: string;
+  amount: number;
+  date: string;
+  memo: string;
+}
+
 export default function Home() {
   const router = useRouter();
   const accessToken = Cookies.get("accessToken");
   const [loading, setLoading] = useState(true);
+  const [breakdown, setBreakdown] = useState<breakdown[]>([]);
 
   useEffect(() => {
     axios
@@ -26,6 +36,17 @@ export default function Home() {
       })
       .catch((e) => {
         if (e.response.status === 401) router.replace("/signIn");
+      });
+
+    axios
+      .get("http://localhost:3000/breakdown", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
+      .then((res) => {
+        if (res.data.ok) setBreakdown(res.data.breakdown);
+      })
+      .catch((e) => {
+        console.error(e);
       });
   }, [accessToken, router]);
 
@@ -108,33 +129,6 @@ export default function Home() {
             <div className="space-y-3">
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <p>18일 오늘</p>
-                  <div className="flex space-x-3">
-                    <p>-563,900원</p>
-                  </div>
-                </div>
-                <hr />
-              </div>
-              <div className="space-y-5">
-                <div className="flex items-center justify-between">
-                  <div className="space-x-3">
-                    <span className="bg-red-400 text-white py-1 px-3 rounded-md">지출</span>
-                    <span>월세</span>
-                  </div>
-                  <p>-555,000원</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="space-x-3">
-                    <span className="bg-red-400 text-white py-1 px-3 rounded-md">지출</span>
-                    <span>치킨</span>
-                  </div>
-                  <p>-13,900원</p>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
                   <p>17일 수요일</p>
                   <div className="flex space-x-3">
                     <p className="text-green-500">+5,000,000원</p>
@@ -144,20 +138,29 @@ export default function Home() {
                 <hr />
               </div>
               <div className="space-y-5">
-                <div className="flex items-center justify-between">
-                  <div className="space-x-3">
-                    <span className="bg-red-400 text-white py-1 px-3 rounded-md">지출</span>
-                    <span>쿠팡</span>
-                  </div>
-                  <p>-15,600원</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="space-x-3">
-                    <span className="bg-green-400 text-white py-1 px-3 rounded-md">수입</span>
-                    <span>주식</span>
-                  </div>
-                  <p className="text-green-500">+5,000,000원</p>
-                </div>
+                {breakdown.map((item) => {
+                  return (
+                    <div key={item.id} className="flex items-center justify-between">
+                      <div className="space-x-3 flex items-center">
+                        <span
+                          className={`${
+                            item.type === "income" ? "bg-green-400" : "bg-red-400"
+                          } text-white py-2 px-3 rounded-md`}
+                        >
+                          {item.type === "income" ? "수입" : "지출"}
+                        </span>
+                        <div>
+                          <p>{item.category}</p>
+                          <p className="text-sm text-slate-400 font-normal">메모</p>
+                        </div>
+                      </div>
+                      <p>
+                        {item.type === "income" ? "+" : "-"}
+                        {item.amount.toLocaleString("ko-KR")}원
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

@@ -28,11 +28,14 @@ export default function Create() {
       .catch((e) => {
         if (e.response.status === 401) router.replace("/signIn");
       });
-  }, [accessToken, router]);
+    setValue("type", "income");
+  }, [accessToken, router, setValue]);
 
   const onSubmit = (formData: any) => {
     axios
-      .post("http://localhost:3000/breakdown/create", formData)
+      .post("http://localhost:3000/breakdown/create", formData, {
+        headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
+      })
       .then((res) => {
         if (res.data.ok) router.replace("/");
         else console.error(res.data);
