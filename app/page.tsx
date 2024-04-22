@@ -104,17 +104,30 @@ export default function Home() {
     <div>
       {!loading && (
         <div className="space-y-5">
-          <div className="flex items-center space-x-3">
-            <button className={`${isLoading && "pointer-events-none"}`}>
-              <FontAwesomeIcon icon={faCaretLeft} onClick={onClickLeftBtn} />
-            </button>
-            <span className="text-2xl">
-              {year !== currentYear && <span>{year}년</span>}
-              {month}월
-            </span>
-            <button className={`${isLoading && "pointer-events-none"}`}>
-              <FontAwesomeIcon icon={faCaretRight} onClick={onClickRightBtn} />
-            </button>
+          <div className="flex items-center space-x-5">
+            <div className="flex items-center space-x-3">
+              <button className={`${isLoading && "pointer-events-none"}`}>
+                <FontAwesomeIcon icon={faCaretLeft} onClick={onClickLeftBtn} />
+              </button>
+              <span className="text-2xl">
+                {year !== currentYear && <span>{year}년</span>}
+                {month}월
+              </span>
+              <button className={`${isLoading && "pointer-events-none"}`}>
+                <FontAwesomeIcon icon={faCaretRight} onClick={onClickRightBtn} />
+              </button>
+            </div>
+            {(month !== currentMonth || year !== currentYear) && (
+              <button
+                className="bg-slate-200 text-slate-700 py-1 px-3 rounded-md text-sm hover:bg-green-400 hover:text-white duration-300"
+                onClick={() => {
+                  setYear(currentYear);
+                  setMonth(currentMonth);
+                }}
+              >
+                현재 날짜로 이동
+              </button>
+            )}
           </div>
           <div className="flex items-center justify-between">
             <div className="space-y-2">
