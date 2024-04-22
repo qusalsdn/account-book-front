@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
+import { register } from "module";
+import { useForm } from "react-hook-form";
 
 interface Breakdown {
   id: number;
@@ -59,13 +61,14 @@ export default function Home() {
   );
   const [isLoading, setIsLoading] = useState(false);
   const days = ["일", "월", "화", "수", "목", "금", "토"];
+  const [type, setType] = useState("all");
 
   useEffect(() => {
     setIsLoading(true);
     axios
       .get("http://localhost:3000/breakdown", {
         headers: { Authorization: `Bearer ${accessToken}` },
-        params: { date: `${year}-${month.toString().padStart(2, "0")}` },
+        params: { date: `${year}-${month.toString().padStart(2, "0")}`, type: type },
       })
       .then((res) => {
         if (res.data.ok) {
@@ -78,7 +81,7 @@ export default function Home() {
       .catch((e) => {
         console.error(e);
       });
-  }, [accessToken, month, year]);
+  }, [accessToken, month, year, type]);
 
   // 월 왼쪽 버튼
   const onClickLeftBtn = () => {
@@ -147,13 +150,17 @@ export default function Home() {
             </div>
           </div>
           <div className="flex items-center justify-between">
-            <select className="outline-none">
+            <select className="outline-none" onChange={(e) => setType(e.target.value)}>
               <option value="all">전체 내역</option>
-              <option value="Income">수입 내역</option>
-              <option value="Spending">지출 내역</option>
+              <option value="income">수입 내역</option>
+              <option value="spending">지출 내역</option>
             </select>
             <div className="flex items-center space-x-5">
-              <button className="text-lg">
+              <input
+                type="text"
+                className="outline-none border-2 px-2 py-1 text-sm font-normal focus:border-green-400 duration-700"
+              />
+              <button type="submit" className="text-lg">
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
               </button>
               <button className="text-xl hover:text-green-500 duration-300">
@@ -175,10 +182,14 @@ export default function Home() {
                       {day}일 {dayOfWeek}요일
                     </p>
                     <div className="flex space-x-3">
-                      <p className="text-green-500">
-                        +{Number(value.income).toLocaleString("ko-KR")}원
-                      </p>
-                      <p>-{Number(value.spending).toLocaleString("ko-KR")}원</p>
+                      {type !== "spending" && (
+                        <p className="text-green-500">
+                          +{Number(value.income).toLocaleString("ko-KR")}원
+                        </p>
+                      )}
+                      {type !== "income" && (
+                        <p>-{Number(value.spending).toLocaleString("ko-KR")}원</p>
+                      )}
                     </div>
                   </div>
                   <hr className="mt-1 mb-3" />
