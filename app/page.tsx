@@ -9,13 +9,19 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-interface breakdown {
+interface Breakdown {
   id: number;
-  type: string;
+  type: "income" | "spending";
   category: string;
-  amount: number;
+  amount: string;
   date: string;
-  memo: string;
+  memo?: string;
+}
+
+interface ResponseData {
+  data: Breakdown[];
+  income: string;
+  spending: string;
 }
 
 export default function Home() {
@@ -41,12 +47,13 @@ export default function Home() {
   const currentDate = new Date();
   let currentYear = currentDate.getFullYear();
   let currentMonth = currentDate.getMonth() + 1;
-  const [breakdown, setBreakdown] = useState<breakdown[]>([]);
+  const [breakdown, setBreakdown] = useState<Record<string, ResponseData>>({});
   const [income, setIncome] = useState(0);
   const [spending, setSpending] = useState(0);
   const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(currentMonth);
   const [isLoading, setIsLoading] = useState(false);
+  const days = ["일", "월", "화", "수", "목", "금", "토"];
 
   useEffect(() => {
     setIsLoading(true);
@@ -105,7 +112,7 @@ export default function Home() {
             </button>
           </div>
           <div className="flex items-center justify-between">
-            <div>
+            <div className="space-y-2">
               <div className="flex items-center space-x-3">
                 <p className="text-slate-600">지출</p>
                 <p className="text-xl">{income.toLocaleString("ko-KR")}원</p>
@@ -138,44 +145,53 @@ export default function Home() {
               </button>
             </div>
           </div>
-          <div className="space-y-7">
-            <div className="space-y-3">
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <p>17일 수요일</p>
-                  <div className="flex space-x-3">
-                    <p className="text-green-500">+5,000,000원</p>
-                    <p>-15,680원</p>
+          <div className="space-y-10">
+            {Object.entries(breakdown).map(([key, value]) => {
+              const date = new Date(key);
+              const day = date.getDate();
+              const dayOfWeek = days[date.getDay()];
+              return (
+                <div key={key}>
+                  <div className="flex items-center justify-between">
+                    <p>
+                      {day}일 {dayOfWeek}요일
+                    </p>
+                    <div className="flex space-x-3">
+                      <p className="text-green-500">
+                        +{Number(value.income).toLocaleString("ko-KR")}원
+                      </p>
+                      <p>-{Number(value.spending).toLocaleString("ko-KR")}원</p>
+                    </div>
+                  </div>
+                  <hr className="mt-1 mb-3" />
+                  <div className="space-y-5">
+                    {value.data.map((item) => {
+                      return (
+                        <div key={item.id} className="flex items-center justify-between">
+                          <div className="space-x-3 flex items-center">
+                            <span
+                              className={`${
+                                item.type === "income" ? "bg-green-400" : "bg-red-400"
+                              } text-white py-2 px-3 rounded-md`}
+                            >
+                              {item.type === "income" ? "수입" : "지출"}
+                            </span>
+                            <div>
+                              <p>{item.category}</p>
+                              <p className="text-sm text-slate-400 font-normal">{item.memo}</p>
+                            </div>
+                          </div>
+                          <p>
+                            {item.type === "income" ? "+" : "-"}
+                            {Number(item.amount).toLocaleString("ko-KR")}원
+                          </p>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-                <hr />
-              </div>
-              <div className="space-y-5">
-                {breakdown.map((item) => {
-                  return (
-                    <div key={item.id} className="flex items-center justify-between">
-                      <div className="space-x-3 flex items-center">
-                        <span
-                          className={`${
-                            item.type === "income" ? "bg-green-400" : "bg-red-400"
-                          } text-white py-2 px-3 rounded-md`}
-                        >
-                          {item.type === "income" ? "수입" : "지출"}
-                        </span>
-                        <div>
-                          <p>{item.category}</p>
-                          <p className="text-sm text-slate-400 font-normal">{item.memo}</p>
-                        </div>
-                      </div>
-                      <p>
-                        {item.type === "income" ? "+" : "-"}
-                        {item.amount.toLocaleString("ko-KR")}원
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
       )}
