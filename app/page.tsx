@@ -173,7 +173,7 @@ export default function Home() {
               <div className="space-x-2">
                 <input
                   type="text"
-                  className="outline-none border-2 px-2 py-1 text-sm font-normal focus:border-green-400 duration-700"
+                  className="outline-none border-2 px-2 py-1 text-sm font-normal focus:border-green-400 duration-700 rounded-md"
                   placeholder="카테고리 or 메모 입력"
                   {...register("search")}
                 />
