@@ -210,7 +210,7 @@ export default function Home() {
                               <p className="text-sm text-slate-400 font-normal">{item.memo}</p>
                             </div>
                           </div>
-                          <p>
+                          <p className={`${item.type === "income" && "text-green-500"}`}>
                             {item.type === "income" ? "+" : "-"}
                             {Number(item.amount).toLocaleString("ko-KR")}원
                           </p>
