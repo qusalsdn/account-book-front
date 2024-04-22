@@ -136,11 +136,11 @@ export default function Home() {
             <div className="space-y-2">
               <div className="flex items-center space-x-3">
                 <p className="text-slate-600">지출</p>
-                <p className="text-xl">{income.toLocaleString("ko-KR")}원</p>
+                <p className="text-xl">{spending.toLocaleString("ko-KR")}원</p>
               </div>
               <div className="flex items-center space-x-3">
                 <p className="text-slate-600">수입</p>
-                <p className="text-green-500 text-xl">{spending.toLocaleString("ko-KR")}원</p>
+                <p className="text-green-500 text-xl">{income.toLocaleString("ko-KR")}원</p>
               </div>
             </div>
             <div>

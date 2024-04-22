@@ -13,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="w-[480px] mx-auto h-screen mt-10 px-5 select-none font-bold">
+      <body className="w-[480px] mx-auto h-screen my-10 px-5 select-none font-bold">
         {children}
       </body>
     </html>
