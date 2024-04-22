@@ -22,7 +22,6 @@ export default function Home() {
   const router = useRouter();
   const accessToken = Cookies.get("accessToken");
   const [loading, setLoading] = useState(true);
-  const [breakdown, setBreakdown] = useState<breakdown[]>([]);
 
   useEffect(() => {
     axios
@@ -37,29 +36,41 @@ export default function Home() {
       .catch((e) => {
         if (e.response.status === 401) router.replace("/signIn");
       });
-
-    axios
-      .get("http://localhost:3000/breakdown", {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      })
-      .then((res) => {
-        if (res.data.ok) setBreakdown(res.data.breakdown);
-      })
-      .catch((e) => {
-        console.error(e);
-      });
   }, [accessToken, router]);
 
   const currentDate = new Date();
   let currentYear = currentDate.getFullYear();
   let currentMonth = currentDate.getMonth() + 1;
+  const [breakdown, setBreakdown] = useState<breakdown[]>([]);
+  const [income, setIncome] = useState(0);
+  const [spending, setSpending] = useState(0);
   const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(currentMonth);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    axios
+      .get("http://localhost:3000/breakdown", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: { date: `${year}-${month.toString().padStart(2, "0")}` },
+      })
+      .then((res) => {
+        if (res.data.ok) {
+          setBreakdown(res.data.breakdown);
+          setIncome(res.data.income);
+          setSpending(res.data.spending);
+        }
+        setIsLoading(false);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }, [accessToken, month, year]);
 
   // 월 왼쪽 버튼
   const onClickLeftBtn = () => {
     if (month === 1 && year !== 0) {
-      console.log("test");
       setYear(year - 1);
       setMonth(12);
     } else {
@@ -82,14 +93,14 @@ export default function Home() {
       {!loading && (
         <div className="space-y-5">
           <div className="flex items-center space-x-3">
-            <button>
+            <button className={`${isLoading && "pointer-events-none"}`}>
               <FontAwesomeIcon icon={faCaretLeft} onClick={onClickLeftBtn} />
             </button>
             <span className="text-2xl">
               {year !== currentYear && <span>{year}년</span>}
               {month}월
             </span>
-            <button>
+            <button className={`${isLoading && "pointer-events-none"}`}>
               <FontAwesomeIcon icon={faCaretRight} onClick={onClickRightBtn} />
             </button>
           </div>
@@ -97,15 +108,17 @@ export default function Home() {
             <div>
               <div className="flex items-center space-x-3">
                 <p className="text-slate-600">지출</p>
-                <p className="text-xl">956,784원</p>
+                <p className="text-xl">{income.toLocaleString("ko-KR")}원</p>
               </div>
               <div className="flex items-center space-x-3">
                 <p className="text-slate-600">수입</p>
-                <p className="text-green-500 text-xl">1,806,920원</p>
+                <p className="text-green-500 text-xl">{spending.toLocaleString("ko-KR")}원</p>
               </div>
             </div>
             <div>
-              <button className="bg-slate-200 text-slate-700 py-3 px-5 rounded-md">분석</button>
+              <button className="bg-slate-200 text-slate-700 py-3 px-5 rounded-md hover:bg-green-400 duration-500 hover:text-white">
+                분석
+              </button>
             </div>
           </div>
           <div className="flex items-center justify-between">
