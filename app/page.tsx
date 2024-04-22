@@ -1,6 +1,11 @@
 "use client";
 
-import { faCaretLeft, faCaretRight, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCaretLeft,
+  faCaretRight,
+  faMagnifyingGlass,
+  faRotateRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -62,13 +67,19 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const days = ["일", "월", "화", "수", "목", "금", "토"];
   const [type, setType] = useState("all");
+  const { register, handleSubmit, reset } = useForm<any>();
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     setIsLoading(true);
     axios
       .get("http://localhost:3000/breakdown", {
         headers: { Authorization: `Bearer ${accessToken}` },
-        params: { date: `${year}-${month.toString().padStart(2, "0")}`, type: type },
+        params: {
+          date: `${year}-${month.toString().padStart(2, "0")}`,
+          type,
+          search,
+        },
       })
       .then((res) => {
         if (res.data.ok) {
@@ -81,7 +92,7 @@ export default function Home() {
       .catch((e) => {
         console.error(e);
       });
-  }, [accessToken, month, year, type]);
+  }, [accessToken, month, year, type, search]);
 
   // 월 왼쪽 버튼
   const onClickLeftBtn = () => {
@@ -155,12 +166,28 @@ export default function Home() {
               <option value="income">수입 내역</option>
               <option value="spending">지출 내역</option>
             </select>
-            <div className="flex items-center space-x-5">
-              <input
-                type="text"
-                className="outline-none border-2 px-2 py-1 text-sm font-normal focus:border-green-400 duration-700"
-              />
-              <button type="submit" className="text-lg">
+            <form
+              className="flex items-center space-x-5"
+              onSubmit={handleSubmit(({ search }: { search: string }) => setSearch(search))}
+            >
+              <div className="space-x-2">
+                <input
+                  type="text"
+                  className="outline-none border-2 px-2 py-1 text-sm font-normal focus:border-green-400 duration-700"
+                  placeholder="카테고리 or 메모 입력"
+                  {...register("search")}
+                />
+                <button
+                  className="bg-slate-200 text-slate-700 py-1 px-2 rounded-md"
+                  onClick={() => {
+                    reset();
+                    setSearch("");
+                  }}
+                >
+                  <FontAwesomeIcon icon={faRotateRight} />
+                </button>
+              </div>
+              <button type="submit" className="text-lg hover:text-green-500 duration-300">
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
               </button>
               <button className="text-xl hover:text-green-500 duration-300">
@@ -168,7 +195,7 @@ export default function Home() {
                   <FontAwesomeIcon icon={faPlus} />
                 </Link>
               </button>
-            </div>
+            </form>
           </div>
           <div className="space-y-10">
             {Object.entries(breakdown).map(([key, value]) => {
