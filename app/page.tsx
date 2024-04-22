@@ -178,6 +178,7 @@ export default function Home() {
                   {...register("search")}
                 />
                 <button
+                  type="button"
                   className="bg-slate-200 text-slate-700 py-1 px-2 rounded-md"
                   onClick={() => {
                     reset();
