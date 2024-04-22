@@ -3,17 +3,20 @@
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 
 export default function Create() {
   const router = useRouter();
-  const { register, handleSubmit, reset, setValue } = useForm();
+  const searchParams = useSearchParams();
+  const { register, handleSubmit, reset, setValue } = useForm<any>();
   const [breakdownType, setBreakdownType] = useState(0);
   const accessToken = Cookies.get("accessToken");
   const [loading, setLoading] = useState(true);
+  let year = searchParams.get("year");
+  let month = searchParams.get("month");
 
   useEffect(() => {
     axios
@@ -31,13 +34,15 @@ export default function Create() {
     setValue("type", "income");
   }, [accessToken, router, setValue]);
 
-  const onSubmit = (formData: any) => {
+  const onSubmit = (formData: { date: string }) => {
+    year = formData.date.split("-")[0];
+    month = formData.date.split("-")[1];
     axios
       .post("http://localhost:3000/breakdown/create", formData, {
         headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
       })
       .then((res) => {
-        if (res.data.ok) router.replace("/");
+        if (res.data.ok) router.replace(`/?year=${year}&month=${month}`);
         else console.error(res.data);
       })
       .catch((e) => {
@@ -61,7 +66,7 @@ export default function Create() {
         <div className="space-y-7">
           <button
             className="flex items-center text-blue-500 space-x-2"
-            onClick={() => router.back()}
+            onClick={() => router.replace(`/?year=${year}&month=${month}`)}
           >
             <FontAwesomeIcon icon={faAngleLeft} fontSize={26} />
             <span className="text-xl">홈</span>

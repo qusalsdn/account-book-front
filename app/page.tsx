@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 
 interface Breakdown {
@@ -26,6 +26,7 @@ interface ResponseData {
 
 export default function Home() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const accessToken = Cookies.get("accessToken");
   const [loading, setLoading] = useState(true);
 
@@ -50,8 +51,12 @@ export default function Home() {
   const [breakdown, setBreakdown] = useState<Record<string, ResponseData>>({});
   const [income, setIncome] = useState(0);
   const [spending, setSpending] = useState(0);
-  const [year, setYear] = useState(currentYear);
-  const [month, setMonth] = useState(currentMonth);
+  const [year, setYear] = useState(
+    searchParams.get("year") ? Number(searchParams.get("year")) : currentYear
+  );
+  const [month, setMonth] = useState(
+    searchParams.get("month") ? Number(searchParams.get("month")) : currentMonth
+  );
   const [isLoading, setIsLoading] = useState(false);
   const days = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -139,7 +144,7 @@ export default function Home() {
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
               </button>
               <button className="text-xl hover:text-green-500 duration-300">
-                <Link href={"/create"}>
+                <Link href={`/create?year=${year}&month=${month}`}>
                   <FontAwesomeIcon icon={faPlus} />
                 </Link>
               </button>
