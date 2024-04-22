@@ -167,19 +167,25 @@ export default function Home() {
               <option value="spending">지출 내역</option>
             </select>
             <form
-              className="flex items-center space-x-5"
+              className="flex items-center space-x-3"
               onSubmit={handleSubmit(({ search }: { search: string }) => setSearch(search))}
             >
-              <div className="space-x-2">
-                <input
-                  type="text"
-                  className="outline-none border-2 px-2 py-1 text-sm font-normal focus:border-green-400 duration-700 rounded-md"
-                  placeholder="카테고리 or 메모 입력"
-                  {...register("search")}
-                />
+              <div className="space-x-2 flex">
+                <div className="relative">
+                  <input
+                    type="text"
+                    className="outline-none border-2 pl-8 pr-2 py-1 text-sm font-normal focus:border-green-400 duration-700 rounded-md searchInput"
+                    placeholder="카테고리 or 메모 입력"
+                    {...register("search")}
+                  />
+                  <FontAwesomeIcon
+                    icon={faMagnifyingGlass}
+                    className="z-10 absolute top-1/2 left-4 transform -translate-x-1/2 -translate-y-1/2 text-slate-400 searchIcon"
+                  />
+                </div>
                 <button
                   type="button"
-                  className="bg-slate-200 text-slate-700 py-1 px-2 rounded-md"
+                  className="bg-slate-200 text-slate-700 py-1 px-2 rounded-md hover:text-green-500 duration-300"
                   onClick={() => {
                     reset();
                     setSearch("");
@@ -188,9 +194,6 @@ export default function Home() {
                   <FontAwesomeIcon icon={faRotateRight} />
                 </button>
               </div>
-              <button type="submit" className="text-lg hover:text-green-500 duration-300">
-                <FontAwesomeIcon icon={faMagnifyingGlass} />
-              </button>
               <button className="text-xl hover:text-green-500 duration-300">
                 <Link href={`/create?year=${year}&month=${month}`}>
                   <FontAwesomeIcon icon={faPlus} />
