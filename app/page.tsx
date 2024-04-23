@@ -15,7 +15,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 
-interface Breakdown {
+export interface Breakdown {
   id: number;
   type: "income" | "spending";
   category: string;
@@ -74,6 +74,7 @@ export default function Home() {
         setLoading(false);
       })
       .catch((e) => {
+        console.error(e);
         if (e.response.status === 401) router.replace("/signIn");
       });
   }, [accessToken, month, year, type, search, router]);
@@ -219,7 +220,11 @@ export default function Home() {
                   <div className="space-y-5">
                     {value.data.map((item) => {
                       return (
-                        <div key={item.id} className="flex items-center justify-between">
+                        <Link
+                          href={`/update/${item.id}?year=${year}&month=${month}`}
+                          key={item.id}
+                          className="flex items-center justify-between"
+                        >
                           <div className="space-x-3 flex items-center">
                             <span
                               className={`${
@@ -237,7 +242,7 @@ export default function Home() {
                             {item.type === "income" ? "+" : "-"}
                             {Number(item.amount).toLocaleString("ko-KR")}원
                           </p>
-                        </div>
+                        </Link>
                       );
                     })}
                   </div>
