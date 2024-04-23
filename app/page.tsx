@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
-import { register } from "module";
 import { useForm } from "react-hook-form";
 
 interface Breakdown {
@@ -37,21 +36,6 @@ export default function Home() {
   const accessToken = Cookies.get("accessToken");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    axios
-      .post(
-        "http://localhost:3000/auth",
-        { username: Cookies.get("accessToken") },
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      )
-      .then((res) => {
-        setLoading(false);
-      })
-      .catch((e) => {
-        if (e.response.status === 401) router.replace("/signIn");
-      });
-  }, [accessToken, router]);
-
   const currentDate = new Date();
   let currentYear = currentDate.getFullYear();
   let currentMonth = currentDate.getMonth() + 1;
@@ -71,7 +55,7 @@ export default function Home() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    setIsLoading(true);
+    setLoading(true);
     axios
       .get("http://localhost:3000/breakdown", {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -87,31 +71,35 @@ export default function Home() {
           setIncome(res.data.income);
           setSpending(res.data.spending);
         }
-        setIsLoading(false);
+        setLoading(false);
       })
       .catch((e) => {
-        console.error(e);
+        if (e.response.status === 401) router.replace("/signIn");
       });
-  }, [accessToken, month, year, type, search]);
+  }, [accessToken, month, year, type, search, router]);
 
   // 월 왼쪽 버튼
   const onClickLeftBtn = () => {
+    setIsLoading(true);
     if (month === 1 && year !== 0) {
       setYear(year - 1);
       setMonth(12);
     } else {
       setMonth(month - 1);
     }
+    setIsLoading(false);
   };
 
   // 월 오른쪽 버튼
   const onClickRightBtn = () => {
+    setIsLoading(true);
     if (month === 12) {
       setYear(year + 1);
       setMonth(1);
     } else {
       setMonth(month + 1);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -155,13 +143,17 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <button className="bg-slate-200 text-slate-700 py-3 px-5 rounded-md hover:bg-green-400 duration-500 hover:text-white">
-                분석
-              </button>
+              <Link
+                href={`/analysis?year=${year}&month=${month}&income=${income}&spending=${spending}`}
+              >
+                <button className="bg-slate-200 text-slate-700 py-3 px-5 rounded-md hover:bg-green-400 duration-500 hover:text-white">
+                  분석
+                </button>
+              </Link>
             </div>
           </div>
           <div className="flex items-center justify-between">
-            <select className="outline-none" onChange={(e) => setType(e.target.value)}>
+            <select className="outline-none" onChange={(e) => setType(e.target.value)} value={type}>
               <option value="all">전체 내역</option>
               <option value="income">수입 내역</option>
               <option value="spending">지출 내역</option>

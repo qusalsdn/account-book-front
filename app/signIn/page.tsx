@@ -11,7 +11,7 @@ interface User {
   password: string;
 }
 
-export default function SignUp() {
+export default function SignIn() {
   const router = useRouter();
   const { register, handleSubmit } = useForm<User>();
   const accessToken = Cookies.get("accessToken");
