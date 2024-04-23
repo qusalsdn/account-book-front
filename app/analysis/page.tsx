@@ -44,13 +44,16 @@ export default function Analysis() {
         }
       )
       .then((res) => {
-        setChartData(res.data.chartData);
-        setBreakdown(res.data.breakdown);
-        setIncome(Number(searchParamsIncome));
-        setSpending(Number(searchParamsSpending));
-        setLoading(false);
+        if (res.data.ok) {
+          setChartData(res.data.chartData);
+          setBreakdown(res.data.breakdown);
+          setIncome(Number(searchParamsIncome));
+          setSpending(Number(searchParamsSpending));
+          setLoading(false);
+        }
       })
       .catch((e) => {
+        console.error(e);
         if (e.response.status === 401) router.replace("/signIn");
       });
   }, [accessToken, month, router, searchParamsIncome, searchParamsSpending, type, year]);
