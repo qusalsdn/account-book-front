@@ -1,6 +1,6 @@
 "use client";
 
-import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -148,14 +148,14 @@ export default function Create() {
             <div className="flex items-center justify-between">
               <button
                 type="button"
-                className="py-4 px-9 bg-slate-200 text-slate-700 rounded-md"
+                className="py-4 px-6 bg-blue-400 text-white hover:bg-blue-500 duration-500 rounded-md"
                 onClick={() => reset()}
               >
-                초기화
+                <FontAwesomeIcon icon={faRotateRight} />
               </button>
               <button
                 type="submit"
-                className="py-4 px-32 text-white bg-green-500 hover:bg-green-600 duration-500 rounded-md"
+                className="py-4 px-40 text-white bg-green-500 hover:bg-green-600 duration-500 rounded-md"
               >
                 저장
               </button>
