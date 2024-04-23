@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 
 interface Breakdown {
   category: string;
-  amount: string;
+  amount: number;
   color: string;
 }
 
@@ -110,7 +110,7 @@ export default function Analysis() {
                       ></p>
                       <span>{item.category}</span>
                     </div>
-                    <div>{Number(item.amount).toLocaleString("ko-KR")}원</div>
+                    <div>{item.amount.toLocaleString("ko-KR")}원</div>
                   </div>
                 );
               })}
