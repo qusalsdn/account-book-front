@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  faArrowRightFromBracket,
   faCaretLeft,
   faCaretRight,
   faMagnifyingGlass,
@@ -103,21 +104,38 @@ export default function Home() {
     setIsLoading(false);
   };
 
+  const onClickLogoutBtn = () => {
+    const confirm = window.confirm("정말 로그아웃하시겠습니까?");
+    if (confirm) {
+      Cookies.remove("accessToken");
+      Cookies.remove("username");
+      router.replace("/signIn");
+    }
+  };
+
   return (
     <div>
       {!loading && (
         <div className="space-y-5">
           <div className="flex items-center space-x-5">
-            <div className="flex items-center space-x-3">
-              <button className={`${isLoading && "pointer-events-none"}`}>
-                <FontAwesomeIcon icon={faCaretLeft} onClick={onClickLeftBtn} />
-              </button>
-              <span className="text-2xl">
-                {year !== currentYear && <span>{year}년</span>}
-                {month}월
-              </span>
-              <button className={`${isLoading && "pointer-events-none"}`}>
-                <FontAwesomeIcon icon={faCaretRight} onClick={onClickRightBtn} />
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center space-x-3">
+                <button className={`${isLoading && "pointer-events-none"}`}>
+                  <FontAwesomeIcon icon={faCaretLeft} onClick={onClickLeftBtn} />
+                </button>
+                <span className="text-2xl">
+                  {year !== currentYear && <span>{year}년</span>}
+                  {month}월
+                </span>
+                <button className={`${isLoading && "pointer-events-none"}`}>
+                  <FontAwesomeIcon icon={faCaretRight} onClick={onClickRightBtn} />
+                </button>
+              </div>
+              <button
+                className="text-2xl text-slate-600 hover:text-red-400 duration-500"
+                onClick={onClickLogoutBtn}
+              >
+                <FontAwesomeIcon icon={faArrowRightFromBracket} />
               </button>
             </div>
             {(month !== currentMonth || year !== currentYear) && (
