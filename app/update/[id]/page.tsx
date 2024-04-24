@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faRotateRight, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { Breakdown } from "@/app/page";
 
 export default function Update({ params }: { params: { id: string } }) {
@@ -61,6 +61,21 @@ export default function Update({ params }: { params: { id: string } }) {
   const onClickSpendingBtn = () => {
     setValue("type", "spending");
     setBreakdownType(1);
+  };
+
+  const onClickDeleteBtn = () => {
+    const confirm = window.confirm("정말 삭제하시겠습니까?");
+    if (confirm)
+      axios
+        .delete(`http://localhost:3000/breakdown/delete/${params.id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+        .then((res) => {
+          if (res.data.ok) router.replace(`/?year=${year}&month=${month}`);
+        })
+        .catch((e) => {
+          if (e.response.status === 401) router.replace("/signIn");
+        });
   };
 
   return (
@@ -150,16 +165,23 @@ export default function Update({ params }: { params: { id: string } }) {
           <div className="flex items-center justify-between">
             <button
               type="button"
-              className="py-4 px-9 bg-slate-200 text-slate-700 rounded-md"
+              className="py-4 px-6 bg-blue-400 text-white hover:bg-blue-500 duration-500 rounded-md"
               onClick={() => reset()}
             >
-              초기화
+              <FontAwesomeIcon icon={faRotateRight} />
             </button>
             <button
               type="submit"
               className="py-4 px-32 text-white bg-green-500 hover:bg-green-600 duration-500 rounded-md"
             >
               저장
+            </button>
+            <button
+              type="button"
+              className="bg-slate-200 py-4 px-6 rounded-md text-slate-700 hover:bg-red-400 duration-500 hover:text-white"
+              onClick={onClickDeleteBtn}
+            >
+              <FontAwesomeIcon icon={faTrashCan} />
             </button>
           </div>
         </form>
