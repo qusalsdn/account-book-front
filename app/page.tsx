@@ -130,6 +130,17 @@ export default function Home() {
                 <button className={`${isLoading && "pointer-events-none"}`}>
                   <FontAwesomeIcon icon={faCaretRight} onClick={onClickRightBtn} />
                 </button>
+                {(month !== currentMonth || year !== currentYear) && (
+                  <button
+                    className="bg-slate-200 text-slate-700 py-1 px-3 rounded-md text-sm hover:bg-green-400 hover:text-white duration-300"
+                    onClick={() => {
+                      setYear(currentYear);
+                      setMonth(currentMonth);
+                    }}
+                  >
+                    현재 날짜로 이동
+                  </button>
+                )}
               </div>
               <button
                 className="text-2xl text-slate-600 hover:text-red-400 duration-500"
@@ -138,17 +149,6 @@ export default function Home() {
                 <FontAwesomeIcon icon={faArrowRightFromBracket} />
               </button>
             </div>
-            {(month !== currentMonth || year !== currentYear) && (
-              <button
-                className="bg-slate-200 text-slate-700 py-1 px-3 rounded-md text-sm hover:bg-green-400 hover:text-white duration-300"
-                onClick={() => {
-                  setYear(currentYear);
-                  setMonth(currentMonth);
-                }}
-              >
-                현재 날짜로 이동
-              </button>
-            )}
           </div>
           <div className="flex items-center justify-between">
             <div className="space-y-2">
