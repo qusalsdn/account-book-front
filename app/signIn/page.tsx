@@ -20,7 +20,7 @@ export default function SignIn() {
   useEffect(() => {
     axios
       .post(
-        "http://localhost:3000/auth",
+        "http://43.202.3.171:3000/auth",
         { username: Cookies.get("accessToken") },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       )
@@ -35,7 +35,7 @@ export default function SignIn() {
 
   const onSubmit = (formData: User) => {
     axios
-      .post("http://localhost:3000/auth/signIn", formData)
+      .post("http://43.202.3.171:3000/auth/signIn", formData)
       .then((res) => {
         if (res.data.ok) {
           Cookies.set("accessToken", res.data.accessToken, { expires: 3 });

@@ -21,7 +21,7 @@ export default function Create() {
   useEffect(() => {
     axios
       .post(
-        "http://localhost:3000/auth",
+        "http://43.202.3.171:3000/auth",
         { username: Cookies.get("accessToken") },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       )
@@ -38,7 +38,7 @@ export default function Create() {
     year = formData.date.split("-")[0];
     month = formData.date.split("-")[1];
     axios
-      .post("http://localhost:3000/breakdown/create", formData, {
+      .post("http://43.202.3.171:3000/breakdown/create", formData, {
         headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
       })
       .then((res) => {
