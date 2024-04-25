@@ -58,7 +58,7 @@ export default function Home() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://43.203.200.5:3000/breakdown", {
+      .get("http://localhost:3000/breakdown", {
         headers: { Authorization: `Bearer ${accessToken}` },
         params: {
           date: `${year}-${month.toString().padStart(2, "0")}`,

@@ -20,7 +20,7 @@ export default function Update({ params }: { params?: { id: string } }) {
 
   useEffect(() => {
     axios
-      .get(`http://43.203.200.5:3000/breakdown/update/${params?.id}`, {
+      .get(`http://localhost:3000/breakdown/update/${params?.id}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       })
       .then((res) => {
@@ -41,7 +41,7 @@ export default function Update({ params }: { params?: { id: string } }) {
 
   const onSubmit = (formData: { date: string }) => {
     axios
-      .post(`http://43.203.200.5:3000/breakdown/update/${params?.id}`, formData, {
+      .post(`http://localhost:3000/breakdown/update/${params?.id}`, formData, {
         headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
       })
       .then((res) => {
@@ -67,7 +67,7 @@ export default function Update({ params }: { params?: { id: string } }) {
     const confirm = window.confirm("정말 삭제하시겠습니까?");
     if (confirm)
       axios
-        .delete(`http://43.203.200.5:3000/breakdown/delete/${params?.id}`, {
+        .delete(`http://localhost:3000/breakdown/delete/${params?.id}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
         .then((res) => {
