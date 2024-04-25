@@ -10,14 +10,14 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the rest of the application code to the working directory
 COPY . .
 
-# Build the Next.js app
+# Build the Next.js application
 RUN npm run build
 
-# Expose the port that your Next.js app runs on
+# Expose the port Next.js is running on
 EXPOSE 3500
 
-# Start the Next.js app
+# Command to run the Next.js application
 CMD ["npm", "start"]
