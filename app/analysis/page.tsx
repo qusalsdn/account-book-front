@@ -35,7 +35,7 @@ export default function Analysis() {
   useEffect(() => {
     axios
       .get(
-        `http://3.34.135.190:3000/breakdown/analysis?date=${year}-${month?.padStart(
+        `http://13.125.54.95:3000/breakdown/analysis?date=${year}-${month?.padStart(
           2,
           "0"
         )}&type=${type}`,

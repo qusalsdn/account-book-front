@@ -15,7 +15,7 @@ export default function SignUp() {
   useEffect(() => {
     axios
       .post(
-        "http://3.34.135.190:3000/auth",
+        "http://13.125.54.95:3000/auth",
         { username: Cookies.get("accessToken") },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       )
@@ -30,7 +30,7 @@ export default function SignUp() {
 
   const onSubmit = (formData: any) => {
     axios
-      .post("http://3.34.135.190:3000/auth/signUp", formData)
+      .post("http://13.125.54.95:3000/auth/signUp", formData)
       .then((res) => {
         if (res.data.ok) router.replace("/signIn");
         else console.error(res.data);
